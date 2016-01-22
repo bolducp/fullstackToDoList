@@ -3,12 +3,14 @@
 $(document).ready(init);
 
 function init(){
+  var currentDate = moment().format('YYYY-MM-DD');
+  $('#date').attr("min", currentDate);
   populateTasks();
   clickHandler();
 }
 
 function clickHandler(){
-  $("#submit").click(addTaskToList);
+  $("form").submit(addTaskToList);
   $("tbody").on("click", ".trashButton", deleteTask);
   $("tbody").on("click", ".done", changeCompletionStatus);
 }
@@ -33,7 +35,8 @@ function createDomElements(data){
   });
 }
 
-function addTaskToList(){
+function addTaskToList(e){
+  e.preventDefault();
   var taskText = $('#task').val();
   var dueDate = moment($('#date').val()).format('MM-DD-YYYY');
   if (dueDate ==="Invalid date"){
@@ -44,7 +47,7 @@ function addTaskToList(){
     .success(function(data){
       var $newTask = createDomElements([newTaskObj]);
       $('#tasks').append($newTask);
-    })
+  })
 }
 
 function deleteTask(){

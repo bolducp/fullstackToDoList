@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.1/animate.min.css">
-  <link href='https://fonts.googleapis.com/css?family=Amatic+SC' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Give+You+Glory' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Amatic+SC|Dosis:300' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
   <link rel="stylesheet" href="css/style.css">
@@ -13,13 +13,20 @@
 
 <body>
   <div class="container">
-    <h1>Welcome to Paige's Fullstack To Do List!</h1>
-  <div class="row" id="taskInput">
-    <label>To do item:  </label><input type="text" size="55" id="task" >
-    <label>Due date:  </label><input type="date" id="date">
-    <input type="submit" value="Submit" id="submit"><br><br>
+    <div class="page-header">
+      <h1>Welcome to Paige's Fullstack-made To Do List!</h1>
+      <div class="row">
+        <h2>Add a task to the list:<h2>
+      </div>
+      <div class="row" id="taskInput">
+        <form >
+          <label>To do item: &nbsp;</label><input type="text" size="55" id="task" required>
+          <label>&nbsp;&nbsp;Due date: &nbsp;</label><input type="date" id="date" >
+          <input type="submit" value="Submit" id="submit"><br><br>
+        </form>
+      </div>
+    </div>
     <button id="removeCompleted">Remove all completed tasks</button>
-  </div>
 
   <table class="table">
     <thead>

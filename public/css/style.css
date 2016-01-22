@@ -1,13 +1,23 @@
 body {
-  background-color: snow;
+  background-color: Cornsilk;
   font-family: 'Dosis', sans-serif;
   font-size: 18px;
 }
 
 h1 {
-  font-family: 'Amatic SC', cursive;
+  margin-top: 15px;
+  font-family: 'Give You Glory', cursive;
   font-size: 45px;
   margin-bottom: 4%;
+  text-align: center;
+}
+
+table {
+  margin-top: 25px;
+}
+
+th {
+  font-size: 22px;
 }
 
 #listHeader, th {
@@ -22,8 +32,4 @@ h1 {
 
 #template {
   display: none;
-}
-
-.row > .row {
-  border-bottom: 1px dotted black;
 }
