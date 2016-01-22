@@ -8,9 +8,9 @@ function init(){
 }
 
 function clickHandler(){
-  $('#submit').click(addTaskToList);
-  $('tbody').on("click", ".trashButton", deleteTask);
-  $('#removeCompleted').click(removeCompleted);
+  $("#submit").click(addTaskToList);
+  $("tbody").on("click", ".trashButton", deleteTask);
+  $("tbody").on("click", ".done", changeCompletionStatus);
 }
 
 function populateTasks(){
@@ -26,8 +26,8 @@ function createDomElements(data){
     $taskRow.removeAttr("id");
     $taskRow.children(".taskName").text(task.name);
     $taskRow.children(".dueDate").text(task.date);
-    if (task.complete === true){
-      $taskRow.children("#done").prop('checked', true);
+    if (task.complete === "true"){
+      $taskRow.find(".done").prop('checked', true);
     }
     return $taskRow;
   });
@@ -39,7 +39,7 @@ function addTaskToList(){
   if (dueDate ==="Invalid date"){
     dueDate = " ";
   }
-  var newTaskObj = {name: taskText, date: dueDate, complete: false};
+  var newTaskObj = {name: taskText, date: dueDate, complete: "false"};
   $.post('./task/add', newTaskObj)
     .success(function(data){
       var $newTask = createDomElements([newTaskObj]);
@@ -59,8 +59,14 @@ function deleteTask(){
   })
 }
 
-
-
+function changeCompletionStatus(){
+  var $taskRow = $(this).closest('tr');
+  var indexToChange = $taskRow.index() - 1;
+  $.post('./change/status', { "index": indexToChange})
+    .success(function(data){
+    $taskRow.addClass("animated flash");
+  })
+}
 
 function removeCompleted(){
   $("input:checked").parent().parent().remove();

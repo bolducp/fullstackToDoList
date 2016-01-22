@@ -43,7 +43,6 @@ app.post('/task/add', function(req, res){
     });
 });
 
-
 app.post('/task/delete', function(req, res){
     fs.readFile('./tasks.json', function(err, data){
       if (err) return res.status(400).send(err);
@@ -59,9 +58,23 @@ app.post('/task/delete', function(req, res){
     });
 });
 
+app.post('/change/status', function(req, res){
+    fs.readFile('./tasks.json', function(err, data){
+      if (err) return res.status(400).send(err);
+      var taskList = JSON.parse(data)
+      var index = req.body.index;
 
-
-
+      if (taskList[index].complete === "true") {
+        taskList[index].complete = "false";
+      } else {
+        taskList[index].complete = "true";
+      }
+      fs.writeFile('./tasks.json', JSON.stringify(taskList), function(err){
+        if (err) throw err;
+        res.send("task status changed\n");
+      });
+    });
+});
 
 
 

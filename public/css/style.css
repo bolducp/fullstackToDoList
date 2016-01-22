@@ -20,6 +20,9 @@ h1 {
   padding-right: 10px;
 }
 
+#template {
+  display: none;
+}
 
 .row > .row {
   border-bottom: 1px dotted black;
