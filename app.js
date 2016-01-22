@@ -48,7 +48,7 @@ app.post('/task/delete', function(req, res){
       if (err) return res.status(400).send(err);
 
       var taskList = JSON.parse(data)
-      var index = req.body;
+      var index = req.body.index;
       taskList.splice(index, 1);
 
       fs.writeFile('./tasks.json', JSON.stringify(taskList), function(err){
@@ -57,6 +57,26 @@ app.post('/task/delete', function(req, res){
       });
     });
 });
+
+
+app.post('/deleteall', function(req, res){
+    fs.readFile('./tasks.json', function(err, data){
+      if (err) return res.status(400).send(err);
+      var taskList = JSON.parse(data);
+      var indices = req.body.indices;
+      var numRemoved = 0;
+      for (var i = 0; i < indices.length; i++){
+        var index = indices[i] - numRemoved;
+        taskList.splice(index, 1);
+        numRemoved++;
+      }
+      fs.writeFile('./tasks.json', JSON.stringify(taskList), function(err){
+        if (err) throw err;
+        res.send("task deleted\n");
+      });
+    });
+});
+
 
 app.post('/change/status', function(req, res){
     fs.readFile('./tasks.json', function(err, data){
@@ -71,12 +91,10 @@ app.post('/change/status', function(req, res){
       }
       fs.writeFile('./tasks.json', JSON.stringify(taskList), function(err){
         if (err) throw err;
-        res.send("task status changed\n");
+        res.send("status changed\n");
       });
     });
 });
-
-
 
 
 app.listen(PORT, function(){

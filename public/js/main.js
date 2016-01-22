@@ -13,6 +13,7 @@ function clickHandler(){
   $("form").submit(addTaskToList);
   $("tbody").on("click", ".trashButton", deleteTask);
   $("tbody").on("click", ".done", changeCompletionStatus);
+  $("#removeCompleted").click(removeCompleted);
 }
 
 function populateTasks(){
@@ -48,12 +49,13 @@ function addTaskToList(e){
       var $newTask = createDomElements([newTaskObj]);
       $('#tasks').append($newTask);
   })
+  $("#newTask").trigger("reset");
 }
 
 function deleteTask(){
   var $taskRow = $(this).closest('tr');
   var indexToRemove = $taskRow.index() - 1;
-  $.post('./task/delete', indexToRemove)
+  $.post('./task/delete', { "index": indexToRemove})
     .success(function(data){
     $taskRow.addClass("animated fadeOutDown");
     setTimeout(function(){
@@ -72,5 +74,29 @@ function changeCompletionStatus(){
 }
 
 function removeCompleted(){
-  $("input:checked").parent().parent().remove();
+  var $rows = []
+  var indices = []
+  $("tr input:checked").closest("tr").each(function(){
+    var $row = $(this);
+    $rows.push($row);
+    $row.hide();
+    var index = $(this).index() - 1;
+    indices.push(index)
+  })
+
+  $.ajax({
+      type: 'POST',
+      url: './deleteall',
+      contentType: 'application/json; charset=utf-8',
+      dataType: 'json',
+      data: JSON.stringify({ "indices": indices}),
+      success: (function(data){
+        for (var i = 0; i < $rows.length; i++){
+          $rows[i].addClass("animated fadeOutDown");
+          setTimeout(function(){
+            $rows[i].remove();
+          }, 700);
+        }
+      })
+  });
 }
