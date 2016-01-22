@@ -7,27 +7,33 @@ function init(){
   clickHandler();
 }
 
-function populateTasks(){
-  $.get('/tasks', function(data){
-    var $tasks = data.map(function(task){
-      var $taskRow = $("#template").clone();
-      $taskRow.removeAttr("id");
-      $taskRow.children(".taskName").text(task.name);
-      $taskRow.children(".dueDate").text(task.date);
-      if (task.complete === true){
-        $taskRow.children("#done").prop('checked', true);
-      }
-      return $taskRow;
-    });
-    $('#tasks').append($tasks);
-  })
-}
-
 function clickHandler(){
   $('#submit').click(addTaskToList);
   $('.glyphicon-trash').click(deleteTask);
   $('#removeCompleted').click(removeCompleted);
 }
+
+function populateTasks(){
+  $.get('/tasks', function(data){
+    var $tasks = createDomElements(data);
+    $('#tasks').append($tasks);
+  })
+}
+
+function createDomElements(data){
+  return data.map(function(task){
+    var $taskRow = $("#template").clone();
+    $taskRow.removeAttr("id");
+    $taskRow.children(".taskName").text(task.name);
+    $taskRow.children(".dueDate").text(task.date);
+    if (task.complete === true){
+      $taskRow.children("#done").prop('checked', true);
+    }
+    return $taskRow;
+  });
+}
+
+
 
 function addTaskToList(){
   var taskText = $('#task').val();
@@ -35,15 +41,12 @@ function addTaskToList(){
   if (dueDate ==="Invalid date"){
     dueDate = " ";
   }
-
-  var task = $("<div>").addClass('col-xs-6').text(taskText);
-  var due = $("<div>").addClass('col-xs-2 due').text(dueDate);
-  var completed = $("<div>").addClass('col-xs-2').append($('<input />',{ type: 'checkbox'}).addClass('col-xs-2'));
-  var trash = $("<div>").addClass('col-xs-2').append($('<span>').addClass("col-xs-2 glyphicon glyphicon-trash"));
-
-  var newTask = $("<div>").addClass("row").append(task, due, completed, trash);
-  $("#itemList").append(newTask);
-  $('.glyphicon-trash').click(deleteTask);
+  var newTaskObj = {name: taskText, date: dueDate, complete: false};
+  $.post('/task/add', newTaskObj)
+    .success(function(data){
+      var $newTask = createDomElements([newTaskObj]);
+      $('#tasks').append($newTask);
+    })
 }
 
 
