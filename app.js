@@ -38,23 +38,23 @@ app.post('/task/add', function(req, res){
 
       fs.writeFile('./tasks.json', JSON.stringify(taskList), function(err){
         if (err) return res.status(400).send(err);
-        res.send("name received\n");
+        res.send("task added\n");
       });
     });
 });
 
 
 app.post('/task/delete', function(req, res){
-    fs.readFile('./names.txt', function(err, data){
+    fs.readFile('./tasks.json', function(err, data){
       if (err) return res.status(400).send(err);
 
-      var updatedText = JSON.parse(data)
-      var name = req.body;
-      updatedText.push(name);
+      var taskList = JSON.parse(data)
+      var index = req.body;
+      taskList.splice(index, 1);
 
-      fs.writeFile('./names.txt', JSON.stringify(updatedText), function(err){
+      fs.writeFile('./tasks.json', JSON.stringify(taskList), function(err){
         if (err) throw err;
-        res.send("name received\n");
+        res.send("task deleted\n");
       });
     });
 });

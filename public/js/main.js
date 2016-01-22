@@ -9,12 +9,12 @@ function init(){
 
 function clickHandler(){
   $('#submit').click(addTaskToList);
-  $('.glyphicon-trash').click(deleteTask);
+  $('tbody').on("click", ".trashButton", deleteTask);
   $('#removeCompleted').click(removeCompleted);
 }
 
 function populateTasks(){
-  $.get('/tasks', function(data){
+  $.get('./tasks', function(data){
     var $tasks = createDomElements(data);
     $('#tasks').append($tasks);
   })
@@ -33,8 +33,6 @@ function createDomElements(data){
   });
 }
 
-
-
 function addTaskToList(){
   var taskText = $('#task').val();
   var dueDate = moment($('#date').val()).format('MM-DD-YYYY');
@@ -42,19 +40,27 @@ function addTaskToList(){
     dueDate = " ";
   }
   var newTaskObj = {name: taskText, date: dueDate, complete: false};
-  $.post('/task/add', newTaskObj)
+  $.post('./task/add', newTaskObj)
     .success(function(data){
       var $newTask = createDomElements([newTaskObj]);
       $('#tasks').append($newTask);
     })
 }
 
-
 function deleteTask(){
-  var $taskRow = ($(this).closest('.row'));
-  $taskRow.addClass("animated fadeOutDown");
-  setTimeout(function(){$taskRow.remove();}, 700);
+  var $taskRow = $(this).closest('tr');
+  var indexToRemove = $taskRow.index() - 1;
+  $.post('./task/delete', indexToRemove)
+    .success(function(data){
+    $taskRow.addClass("animated fadeOutDown");
+    setTimeout(function(){
+      $taskRow.remove();
+    }, 700);
+  })
 }
+
+
+
 
 function removeCompleted(){
   $("input:checked").parent().parent().remove();
