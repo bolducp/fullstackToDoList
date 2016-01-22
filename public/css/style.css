@@ -1,0 +1,26 @@
+body {
+  background-color: snow;
+  font-family: 'Dosis', sans-serif;
+  font-size: 18px;
+}
+
+h1 {
+  font-family: 'Amatic SC', cursive;
+  font-size: 45px;
+  margin-bottom: 4%;
+}
+
+#listHeader, th {
+  margin-top: 5%;
+  border-bottom: 2px solid black;
+}
+
+#itemList {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+
+.row > .row {
+  border-bottom: 1px dotted black;
+}
