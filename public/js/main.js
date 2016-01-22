@@ -79,24 +79,15 @@ function removeCompleted(){
   $("tr input:checked").closest("tr").each(function(){
     var $row = $(this);
     $rows.push($row);
-    $row.hide();
+    $row.addClass("animated fadeOutDown");
     var index = $(this).index() - 1;
     indices.push(index)
   })
-
   $.ajax({
       type: 'POST',
-      url: './deleteall',
+      url: './delete/completed',
       contentType: 'application/json; charset=utf-8',
       dataType: 'json',
-      data: JSON.stringify({ "indices": indices}),
-      success: (function(data){
-        for (var i = 0; i < $rows.length; i++){
-          $rows[i].addClass("animated fadeOutDown");
-          setTimeout(function(){
-            $rows[i].remove();
-          }, 700);
-        }
-      })
+      data: JSON.stringify({ "indices": indices})
   });
 }

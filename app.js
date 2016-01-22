@@ -19,7 +19,6 @@ app.get("/", function(req, res){
   res.send(html);
 });
 
-// middleware -->  next() just invokes the next piece of middleware;
 app.get('/tasks', function(req, res){
   fs.readFile('./tasks.json', function(err, data){
     if (err) return res.status(400).send(err);
@@ -58,26 +57,6 @@ app.post('/task/delete', function(req, res){
     });
 });
 
-
-app.post('/deleteall', function(req, res){
-    fs.readFile('./tasks.json', function(err, data){
-      if (err) return res.status(400).send(err);
-      var taskList = JSON.parse(data);
-      var indices = req.body.indices;
-      var numRemoved = 0;
-      for (var i = 0; i < indices.length; i++){
-        var index = indices[i] - numRemoved;
-        taskList.splice(index, 1);
-        numRemoved++;
-      }
-      fs.writeFile('./tasks.json', JSON.stringify(taskList), function(err){
-        if (err) throw err;
-        res.send("task deleted\n");
-      });
-    });
-});
-
-
 app.post('/change/status', function(req, res){
     fs.readFile('./tasks.json', function(err, data){
       if (err) return res.status(400).send(err);
@@ -96,6 +75,23 @@ app.post('/change/status', function(req, res){
     });
 });
 
+app.post('/delete/completed', function(req, res){
+  fs.readFile('./tasks.json', function(err, data){
+    if (err) return res.status(400).send(err);
+    var taskList = JSON.parse(data);
+    var indices = req.body.indices;
+    var numRemoved = 0;
+    for (var i = 0; i < indices.length; i++){
+      var index = indices[i] - numRemoved;
+      taskList.splice(index, 1);
+      numRemoved++;
+    }
+    fs.writeFile('./tasks.json', JSON.stringify(taskList), function(err){
+      if (err) throw err;
+      res.send("task deleted\n");
+    });
+  });
+});
 
 app.listen(PORT, function(){
   console.log("Express server listening on port", PORT)
